@@ -33,7 +33,11 @@ export function AuthButton() {
   }
 
   return (
-    <Button size="lg" className="mt-8 text-lg font-semibold" onClick={() => signIn('spotify')}>
+    <Button 
+      size="lg" 
+      className="mt-8 text-lg font-semibold" 
+      onClick={() => signIn('spotify', { callbackUrl: '/dashboard' })}
+    >
       <Music className="mr-2" />
       Connect with Spotify
     </Button>

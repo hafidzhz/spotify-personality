@@ -18,6 +18,15 @@ const scopes = [
     "playlist-read-collaborative",
 ].join(",");
 
+// Dynamically determine the redirect URI
+const getRedirectUri = () => {
+  const isDevelopment = process.env.NODE_ENV === 'development';
+  // If NEXTAUTH_URL is set, use it. Otherwise, construct for local dev.
+  const baseUrl = process.env.NEXTAUTH_URL || 'http://localhost:9002';
+  return `${baseUrl}/api/auth/callback/spotify`;
+};
+
+
 const handler = NextAuth({
     providers: [
         SpotifyProvider({
