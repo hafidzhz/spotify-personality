@@ -1,5 +1,6 @@
 "use server";
 
+import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import { getServerSession } from "next-auth";
 import { analyzeMusic } from "@/ai/flows/analyze-music";
 import { generateProfile } from "@/ai/flows/generate-profile";
@@ -8,7 +9,7 @@ import type { GenerateProfileOutput } from '@/ai/flows/generate-profile';
 import { getTopTracks, getAudioFeatures } from "@/lib/spotify";
 
 export async function runAnalysis(): Promise<AnalyzeMusicOutput & GenerateProfileOutput> {
-  const session = await getServerSession();
+  const session = await getServerSession(authOptions);
   if (!session?.accessToken) {
     throw new Error("Not authenticated");
   }
