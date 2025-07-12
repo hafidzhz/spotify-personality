@@ -14,10 +14,12 @@ import { FriendActivity } from '@/components/dashboard/friend-activity';
 import { DashboardSkeleton } from '@/components/dashboard/dashboard-skeleton';
 import { Button } from '@/components/ui/button';
 import { useToast } from '@/hooks/use-toast';
+import { useSession } from 'next-auth/react';
 
 type ProfileData = AnalyzeMusicOutput & GenerateProfileOutput;
 
 export function ClientPage() {
+  const { data: session, status } = useSession();
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [profileData, setProfileData] = useState<ProfileData | null>(null);
@@ -29,8 +31,8 @@ export function ClientPage() {
     try {
       const data = await runAnalysis();
       setProfileData(data);
-    } catch (e) {
-      const errorMessage = 'Failed to analyze your music. Please try again.';
+    } catch (e: any) {
+      const errorMessage = e.message || 'Failed to analyze your music. Please try again.';
       setError(errorMessage);
       toast({
         title: 'Error',
@@ -44,10 +46,15 @@ export function ClientPage() {
   };
 
   useEffect(() => {
-    handleAnalysis();
-  }, []);
+    if (status === 'authenticated') {
+      handleAnalysis();
+    } else if (status === 'unauthenticated') {
+      setError('You are not authenticated. Please log in.');
+      setLoading(false);
+    }
+  }, [status]);
 
-  if (loading) {
+  if (loading || status === 'loading') {
     return <DashboardSkeleton />;
   }
 
@@ -55,7 +62,9 @@ export function ClientPage() {
     return (
       <div className="flex flex-col items-center justify-center min-h-screen text-center">
         <p className="mb-4 text-destructive">{error || 'An unknown error occurred.'}</p>
-        <Button onClick={handleAnalysis}>Try Again</Button>
+        <Button onClick={handleAnalysis} disabled={loading}>
+          {loading ? 'Analyzing...' : 'Try Again'}
+        </Button>
       </div>
     );
   }
