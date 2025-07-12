@@ -1,6 +1,16 @@
 import NextAuth from "next-auth";
 import SpotifyProvider from "next-auth/providers/spotify";
 
+if (!process.env.SPOTIFY_CLIENT_ID) {
+  throw new Error("Missing SPOTIFY_CLIENT_ID in .env");
+}
+if (!process.env.SPOTIFY_CLIENT_SECRET) {
+  throw new Error("Missing SPOTIFY_CLIENT_SECRET in .env");
+}
+if (!process.env.NEXTAUTH_SECRET) {
+  throw new Error("Missing NEXTAUTH_SECRET in .env");
+}
+
 const scopes = [
     "user-top-read",
     "user-read-email",
@@ -11,8 +21,8 @@ const scopes = [
 const handler = NextAuth({
     providers: [
         SpotifyProvider({
-            clientId: process.env.SPOTIFY_CLIENT_ID!,
-            clientSecret: process.env.SPOTIFY_CLIENT_SECRET!,
+            clientId: process.env.SPOTIFY_CLIENT_ID,
+            clientSecret: process.env.SPOTIFY_CLIENT_SECRET,
             authorization: `https://accounts.spotify.com/authorize?scope=${scopes}`,
         }),
     ],
