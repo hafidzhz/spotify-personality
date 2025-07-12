@@ -1,6 +1,5 @@
-import { Button } from '@/components/ui/button';
+import { AuthButton } from '@/components/auth-button';
 import { Music } from 'lucide-react';
-import Link from 'next/link';
 
 export default function Home() {
   return (
@@ -12,12 +11,7 @@ export default function Home() {
         <p className="mt-4 text-lg text-foreground/80 md:text-xl">
           Discover the soul behind your sound. Connect your Spotify to unveil a psychological profile based on your music taste.
         </p>
-        <Link href="/dashboard" passHref>
-          <Button size="lg" className="mt-8 text-lg font-semibold">
-            <Music className="mr-2" />
-            Connect with Spotify
-          </Button>
-        </Link>
+        <AuthButton />
         <div className="mt-12 text-sm text-muted-foreground">
           <p>Powered by Generative AI for deep musical analysis.</p>
         </div>
